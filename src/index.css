@@ -1,0 +1,151 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Swumarket Design System - Zimbabwe-inspired modern marketplace */
+
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 210 10% 15%;
+
+    /* Zimbabwe-inspired color palette */
+    --primary: 154 65% 24%; /* Deep Zimbabwe Green */
+    --primary-light: 154 50% 35%;
+    --primary-dark: 154 75% 18%;
+    --primary-foreground: 0 0% 98%;
+    
+    --secondary: 43 85% 58%; /* Golden Yellow */
+    --secondary-light: 43 75% 68%;
+    --secondary-dark: 43 95% 48%;
+    --secondary-foreground: 210 10% 15%;
+    
+    --accent: 0 75% 52%; /* Warm Red */
+    --accent-light: 0 65% 62%;
+    --accent-dark: 0 85% 42%;
+    --accent-foreground: 0 0% 98%;
+    
+    --neutral: 210 8% 20%; /* Charcoal */
+    --neutral-light: 210 6% 45%;
+    --neutral-lighter: 210 4% 75%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 210 10% 15%;
+
+    --muted: 210 10% 95%;
+    --muted-foreground: 210 6% 45%;
+
+    --destructive: 0 75% 52%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 210 15% 90%;
+    --input: 210 15% 90%;
+    --ring: 154 65% 24%;
+
+    --radius: 0.75rem;
+
+    /* Custom design tokens */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-light)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--secondary-light)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary-dark)));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-light)));
+    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(210 10% 96%));
+    
+    /* Shadows */
+    --shadow-soft: 0 2px 20px hsl(var(--primary) / 0.08);
+    --shadow-medium: 0 8px 30px hsl(var(--primary) / 0.12);
+    --shadow-strong: 0 12px 40px hsl(var(--primary) / 0.15);
+    --shadow-glow: 0 0 30px hsl(var(--primary-light) / 0.3);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .dark {
+    --background: 210 15% 8%;
+    --foreground: 0 0% 95%;
+
+    --primary: 154 50% 45%;
+    --primary-light: 154 40% 55%;
+    --primary-dark: 154 60% 35%;
+    
+    --secondary: 43 75% 55%;
+    --secondary-light: 43 65% 65%;
+    --secondary-dark: 43 85% 45%;
+    
+    --accent: 0 65% 58%;
+    --accent-light: 0 55% 68%;
+    --accent-dark: 0 75% 48%;
+    
+    --card: 210 15% 12%;
+    --card-foreground: 0 0% 95%;
+
+    --muted: 210 15% 15%;
+    --muted-foreground: 210 10% 70%;
+
+    --border: 210 15% 20%;
+    --input: 210 15% 20%;
+    --ring: 154 50% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer components {
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .gradient-secondary {
+    background: var(--gradient-secondary);
+  }
+  
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+  
+  .gradient-accent {
+    background: var(--gradient-accent);
+  }
+  
+  .gradient-subtle {
+    background: var(--gradient-subtle);
+  }
+  
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  
+  .shadow-medium {
+    box-shadow: var(--shadow-medium);
+  }
+  
+  .shadow-strong {
+    box-shadow: var(--shadow-strong);
+  }
+  
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+  
+  .transition-bounce {
+    transition: var(--transition-bounce);
+  }
+}
