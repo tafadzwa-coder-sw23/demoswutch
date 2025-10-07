@@ -136,6 +136,13 @@ const Map = () => {
       // In a real implementation, you would initialize Google Maps here
       // For now, we'll just show a placeholder with pins
       console.log('Map initialized');
+      
+      // Simulate map loading
+      setTimeout(() => {
+        if (mapRef.current) {
+          mapRef.current.style.opacity = '1';
+        }
+      }, 500);
     }
   }, []);
 
@@ -352,63 +359,262 @@ const Map = () => {
 
         {/* Enhanced Map Area */}
         <div className="flex-1 relative bg-gray-100">
-          <div ref={mapRef} className="w-full h-full relative overflow-hidden shadow-inner">
-            {/* Enhanced Google Maps-like Interface */}
-            <div className="absolute inset-0 bg-gradient-to-br from-green-100 via-blue-50 to-green-200 transition-all duration-300">
-              {/* Enhanced Street Grid */}
+          <div ref={mapRef} className="w-full h-full relative overflow-hidden shadow-inner opacity-0 transition-opacity duration-500">
+            {/* Enhanced Professional Map Interface */}
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-green-100 transition-all duration-500">
+              {/* Map Texture Overlay */}
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]"></div>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(34,197,94,0.1),transparent_50%)]"></div>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_75%,rgba(168,85,247,0.1),transparent_50%)]"></div>
+              {/* Enhanced Street Grid with Realistic Styling */}
               <div className="absolute inset-0">
-                {/* Major Roads with shadows */}
-                <div className="absolute top-1/4 left-0 right-0 h-1.5 bg-gray-500 opacity-70 shadow-sm"></div>
-                <div className="absolute top-1/2 left-0 right-0 h-1.5 bg-gray-500 opacity-70 shadow-sm"></div>
-                <div className="absolute top-3/4 left-0 right-0 h-1.5 bg-gray-500 opacity-70 shadow-sm"></div>
-                <div className="absolute left-1/4 top-0 bottom-0 w-1.5 bg-gray-500 opacity-70 shadow-sm"></div>
-                <div className="absolute left-1/2 top-0 bottom-0 w-1.5 bg-gray-500 opacity-70 shadow-sm"></div>
-                <div className="absolute left-3/4 top-0 bottom-0 w-1.5 bg-gray-500 opacity-70 shadow-sm"></div>
+                {/* Major Highways with realistic styling */}
+                <div className="absolute top-1/4 left-0 right-0 h-2 bg-gradient-to-r from-gray-600 to-gray-500 shadow-lg"></div>
+                <div className="absolute top-1/2 left-0 right-0 h-2 bg-gradient-to-r from-gray-600 to-gray-500 shadow-lg"></div>
+                <div className="absolute top-3/4 left-0 right-0 h-2 bg-gradient-to-r from-gray-600 to-gray-500 shadow-lg"></div>
+                <div className="absolute left-1/4 top-0 bottom-0 w-2 bg-gradient-to-b from-gray-600 to-gray-500 shadow-lg"></div>
+                <div className="absolute left-1/2 top-0 bottom-0 w-2 bg-gradient-to-b from-gray-600 to-gray-500 shadow-lg"></div>
+                <div className="absolute left-3/4 top-0 bottom-0 w-2 bg-gradient-to-b from-gray-600 to-gray-500 shadow-lg"></div>
                 
-                {/* Minor Roads with better styling */}
-                <div className="absolute top-1/8 left-0 right-0 h-0.5 bg-gray-400 opacity-50"></div>
-                <div className="absolute top-3/8 left-0 right-0 h-0.5 bg-gray-400 opacity-50"></div>
-                <div className="absolute top-5/8 left-0 right-0 h-0.5 bg-gray-400 opacity-50"></div>
-                <div className="absolute top-7/8 left-0 right-0 h-0.5 bg-gray-400 opacity-50"></div>
-                <div className="absolute left-1/8 top-0 bottom-0 w-0.5 bg-gray-400 opacity-50"></div>
-                <div className="absolute left-3/8 top-0 bottom-0 w-0.5 bg-gray-400 opacity-50"></div>
-                <div className="absolute left-5/8 top-0 bottom-0 w-0.5 bg-gray-400 opacity-50"></div>
-                <div className="absolute left-7/8 top-0 bottom-0 w-0.5 bg-gray-400 opacity-50"></div>
+                {/* Minor Roads with subtle styling */}
+                <div className="absolute top-1/8 left-0 right-0 h-1 bg-gray-400 opacity-60 shadow-sm"></div>
+                <div className="absolute top-3/8 left-0 right-0 h-1 bg-gray-400 opacity-60 shadow-sm"></div>
+                <div className="absolute top-5/8 left-0 right-0 h-1 bg-gray-400 opacity-60 shadow-sm"></div>
+                <div className="absolute top-7/8 left-0 right-0 h-1 bg-gray-400 opacity-60 shadow-sm"></div>
+                <div className="absolute left-1/8 top-0 bottom-0 w-1 bg-gray-400 opacity-60 shadow-sm"></div>
+                <div className="absolute left-3/8 top-0 bottom-0 w-1 bg-gray-400 opacity-60 shadow-sm"></div>
+                <div className="absolute left-5/8 top-0 bottom-0 w-1 bg-gray-400 opacity-60 shadow-sm"></div>
+                <div className="absolute left-7/8 top-0 bottom-0 w-1 bg-gray-400 opacity-60 shadow-sm"></div>
                 
-                {/* Road markings */}
-                <div className="absolute top-1/4 left-1/4 w-8 h-0.5 bg-yellow-400 opacity-80"></div>
-                <div className="absolute top-1/2 left-1/2 w-8 h-0.5 bg-yellow-400 opacity-80"></div>
-                <div className="absolute top-3/4 left-3/4 w-8 h-0.5 bg-yellow-400 opacity-80"></div>
+                {/* Lane Markings with realistic styling */}
+                <div className="absolute top-1/4 left-1/4 w-12 h-0.5 bg-yellow-400 opacity-90 shadow-sm"></div>
+                <div className="absolute top-1/4 left-1/4 w-12 h-0.5 bg-yellow-400 opacity-90 shadow-sm mt-1"></div>
+                <div className="absolute top-1/2 left-1/2 w-12 h-0.5 bg-yellow-400 opacity-90 shadow-sm"></div>
+                <div className="absolute top-1/2 left-1/2 w-12 h-0.5 bg-yellow-400 opacity-90 shadow-sm mt-1"></div>
+                <div className="absolute top-3/4 left-3/4 w-12 h-0.5 bg-yellow-400 opacity-90 shadow-sm"></div>
+                <div className="absolute top-3/4 left-3/4 w-12 h-0.5 bg-yellow-400 opacity-90 shadow-sm mt-1"></div>
+                
+                {/* Intersection Markings */}
+                <div className="absolute top-1/4 left-1/4 w-4 h-4 bg-yellow-300 rounded-full opacity-80"></div>
+                <div className="absolute top-1/2 left-1/2 w-4 h-4 bg-yellow-300 rounded-full opacity-80"></div>
+                <div className="absolute top-3/4 left-3/4 w-4 h-4 bg-yellow-300 rounded-full opacity-80"></div>
               </div>
 
-              {/* Enhanced Street Names */}
-              <div className="absolute top-1/4 left-2 text-xs font-semibold text-gray-700 bg-white/90 px-2 py-1 rounded shadow-sm border border-gray-200">Sam Levy Way</div>
-              <div className="absolute top-1/2 left-2 text-xs font-semibold text-gray-700 bg-white/90 px-2 py-1 rounded shadow-sm border border-gray-200">Borrowdale Road</div>
-              <div className="absolute top-3/4 left-2 text-xs font-semibold text-gray-700 bg-white/90 px-2 py-1 rounded shadow-sm border border-gray-200">Avondale Street</div>
-              <div className="absolute left-1/4 top-2 text-xs font-semibold text-gray-700 bg-white/90 px-2 py-1 rounded shadow-sm border border-gray-200 transform -rotate-90 origin-left">CBD Avenue</div>
-              <div className="absolute left-1/2 top-2 text-xs font-semibold text-gray-700 bg-white/90 px-2 py-1 rounded shadow-sm border border-gray-200 transform -rotate-90 origin-left">Enterprise Road</div>
-              <div className="absolute left-3/4 top-2 text-xs font-semibold text-gray-700 bg-white/90 px-2 py-1 rounded shadow-sm border border-gray-200 transform -rotate-90 origin-left">Chinamora Drive</div>
+              {/* Clean Street Names - Only show on hover */}
+              <div className="absolute top-1/4 left-2 text-xs font-medium text-gray-600 bg-white/80 px-2 py-1 rounded shadow-sm opacity-0 hover:opacity-100 transition-opacity duration-200">Sam Levy Way</div>
+              <div className="absolute top-1/2 left-2 text-xs font-medium text-gray-600 bg-white/80 px-2 py-1 rounded shadow-sm opacity-0 hover:opacity-100 transition-opacity duration-200">Borrowdale Road</div>
+              <div className="absolute top-3/4 left-2 text-xs font-medium text-gray-600 bg-white/80 px-2 py-1 rounded shadow-sm opacity-0 hover:opacity-100 transition-opacity duration-200">Avondale Street</div>
 
-              {/* Enhanced Landmarks and Buildings */}
-              <div className="absolute top-1/6 left-1/6 w-10 h-10 bg-gradient-to-br from-blue-300 to-blue-400 rounded-lg flex items-center justify-center text-sm shadow-lg border-2 border-white">
-                🏪
+              {/* Enhanced Landmark Pins with Professional Styling */}
+              <div className="absolute top-1/6 left-1/6 w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full border-3 border-white shadow-2xl cursor-pointer hover:scale-125 transition-all duration-300 group">
+                <div className="w-full h-full bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-inner">🏪</div>
+                {/* Enhanced Tooltip */}
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 bg-gray-900 text-white text-sm px-3 py-2 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap shadow-2xl">
+                  <div className="font-semibold">OK Zimbabwe</div>
+                  <div className="text-xs text-gray-300">Supermarket • 4.2★</div>
+                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                </div>
+                {/* Pulse Animation */}
+                <div className="absolute inset-0 bg-blue-500 rounded-full animate-ping opacity-20"></div>
               </div>
-              <div className="absolute top-1/6 left-1/6 text-xs font-medium text-gray-800 bg-white/95 px-2 py-1 rounded shadow-md border border-gray-200 -mt-8">OK Zimbabwe</div>
               
-              <div className="absolute top-2/3 left-1/3 w-8 h-8 bg-gradient-to-br from-green-300 to-green-400 rounded-lg flex items-center justify-center text-sm shadow-lg border-2 border-white">
-                🍽️
+              {/* Professional Delivery Tracking Card */}
+              <div className="absolute top-4 right-4 bg-white/98 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-gray-100 max-w-sm">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-lg">
+                    <Navigation className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-base text-gray-900">Live Delivery</h3>
+                    <p className="text-sm text-gray-600">Order #12345</p>
+                  </div>
+                  <div className="ml-auto">
+                    <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                  </div>
+                </div>
+                
+                <div className="bg-gray-50 rounded-xl p-3 mb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-gray-700">ETA</span>
+                    <span className="text-lg font-bold text-green-600">12 min</span>
+                  </div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-gray-700">Distance</span>
+                    <span className="text-sm font-semibold text-gray-900">2.3 km</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-gray-700">Status</span>
+                    <span className="text-xs bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-medium">In Transit</span>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                      <span className="text-sm font-bold text-blue-600">JM</span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">John Moyo</p>
+                      <p className="text-xs text-gray-600">Driver • 4.8★</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                      <span className="text-sm">🏍️</span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">Motorcycle</p>
+                      <p className="text-xs text-gray-600">License: ABC123</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-4 pt-3 border-t border-gray-200">
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-xl">
+                    <Navigation className="h-4 w-4 mr-2" />
+                    Track Driver
+                  </Button>
+                </div>
               </div>
-              <div className="absolute top-2/3 left-1/3 text-xs font-medium text-gray-800 bg-white/95 px-2 py-1 rounded shadow-md border border-gray-200 -mt-7">Nandos</div>
+
+              {/* Restaurant Pin */}
+              <div className="absolute top-2/3 left-1/3 w-6 h-6 bg-green-500 rounded-full border-2 border-white shadow-lg cursor-pointer hover:scale-110 transition-transform duration-200 group">
+                <div className="w-full h-full bg-green-500 rounded-full flex items-center justify-center text-white text-xs">🍽️</div>
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                  Nandos
+                </div>
+              </div>
+
+              {/* Professional Delivery Route */}
+              <div className="absolute inset-0 pointer-events-none">
+                {/* Route Line with better styling */}
+                <svg className="w-full h-full">
+                  <defs>
+                    <linearGradient id="routeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#3b82f6" />
+                      <stop offset="50%" stopColor="#1d4ed8" />
+                      <stop offset="100%" stopColor="#1e40af" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M 100 150 Q 200 100 300 200"
+                    stroke="url(#routeGradient)"
+                    strokeWidth="6"
+                    fill="none"
+                    strokeDasharray="12,6"
+                    className="animate-pulse"
+                  />
+                  <path
+                    d="M 100 150 Q 200 100 300 200"
+                    stroke="#ffffff"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeDasharray="6,3"
+                    className="animate-pulse"
+                    style={{ animationDelay: '0.3s' }}
+                  />
+                </svg>
+                
+                {/* Animated Delivery Truck */}
+                <div className="absolute top-1/2 left-1/4 w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white text-sm shadow-xl animate-bounce transform -translate-x-1/2 -translate-y-1/2">
+                  🚚
+                </div>
+                
+                {/* Start Point - Pickup */}
+                <div className="absolute top-1/2 left-1/4 w-5 h-5 bg-red-500 rounded-full border-3 border-white shadow-xl transform -translate-x-1/2 -translate-y-1/2">
+                  <div className="w-full h-full bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold">P</div>
+                </div>
+                
+                {/* Destination - Delivery */}
+                <div className="absolute top-1/2 right-1/4 w-5 h-5 bg-green-500 rounded-full border-3 border-white shadow-xl transform -translate-x-1/2 -translate-y-1/2">
+                  <div className="w-full h-full bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold">D</div>
+                </div>
+              </div>
               
-              <div className="absolute top-1/3 right-1/4 w-8 h-8 bg-gradient-to-br from-orange-300 to-orange-400 rounded-lg flex items-center justify-center text-sm shadow-lg border-2 border-white">
-                🔧
+              {/* Hardware Store Pin */}
+              <div className="absolute top-1/3 right-1/4 w-6 h-6 bg-orange-500 rounded-full border-2 border-white shadow-lg cursor-pointer hover:scale-110 transition-transform duration-200 group">
+                <div className="w-full h-full bg-orange-500 rounded-full flex items-center justify-center text-white text-xs">🔧</div>
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                  Hardware Store
+                </div>
               </div>
-              <div className="absolute top-1/3 right-1/4 text-xs font-medium text-gray-800 bg-white/95 px-2 py-1 rounded shadow-md border border-gray-200 -mt-7">Hardware</div>
               
-              <div className="absolute bottom-1/4 left-1/2 w-8 h-8 bg-gradient-to-br from-yellow-300 to-yellow-400 rounded-lg flex items-center justify-center text-sm shadow-lg border-2 border-white">
-                🏠
+              {/* Professional Floating Action Buttons */}
+              <div className="absolute bottom-4 right-4 flex flex-col gap-3">
+                <Button 
+                  size="sm" 
+                  className="w-14 h-14 rounded-full shadow-2xl bg-white hover:bg-gray-50 border border-gray-200 hover:scale-105 transition-all duration-200"
+                  title="My Location"
+                >
+                  <Navigation className="h-6 w-6 text-blue-600" />
+                </Button>
+                <Button 
+                  size="sm" 
+                  className="w-14 h-14 rounded-full shadow-2xl bg-white hover:bg-gray-50 border border-gray-200 hover:scale-105 transition-all duration-200"
+                  title="Map Layers"
+                >
+                  <Layers className="h-6 w-6 text-gray-600" />
+                </Button>
+                <Button 
+                  size="sm" 
+                  className="w-14 h-14 rounded-full shadow-2xl bg-white hover:bg-gray-50 border border-gray-200 hover:scale-105 transition-all duration-200"
+                  title="Traffic Info"
+                >
+                  <Car className="h-6 w-6 text-orange-600" />
+                </Button>
+                <Button 
+                  size="sm" 
+                  className="w-14 h-14 rounded-full shadow-2xl bg-white hover:bg-gray-50 border border-gray-200 hover:scale-105 transition-all duration-200"
+                  title="Satellite View"
+                >
+                  <MapPin className="h-6 w-6 text-green-600" />
+                </Button>
               </div>
-              <div className="absolute bottom-1/4 left-1/2 text-xs font-medium text-gray-800 bg-white/95 px-2 py-1 rounded shadow-md border border-gray-200 -mt-7">Residential</div>
+              
+              {/* Professional Quick Delivery Status */}
+              <div className="absolute bottom-4 left-4 bg-white/98 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-gray-100 max-w-sm">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+                    <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-sm text-gray-900">Active Delivery</h4>
+                    <p className="text-xs text-gray-600">Order #12345</p>
+                  </div>
+                </div>
+                
+                <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-3 mb-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-gray-700">ETA</span>
+                    <span className="text-lg font-bold text-green-600">8 min</span>
+                  </div>
+                  <div className="flex items-center justify-between mt-1">
+                    <span className="text-xs text-gray-600">Grocery Delivery</span>
+                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">In Transit</span>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span className="text-xs font-bold text-blue-600">JM</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs font-medium text-gray-900">John Moyo</p>
+                    <p className="text-xs text-gray-600">Driver • 4.8★</p>
+                  </div>
+                  <Button size="sm" className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg">
+                    Track
+                  </Button>
+                </div>
+              </div>
+              
+              {/* Residential Area Pin */}
+              <div className="absolute bottom-1/4 left-1/2 w-6 h-6 bg-yellow-500 rounded-full border-2 border-white shadow-lg cursor-pointer hover:scale-110 transition-transform duration-200 group">
+                <div className="w-full h-full bg-yellow-500 rounded-full flex items-center justify-center text-white text-xs">🏠</div>
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                  Residential Area
+                </div>
+              </div>
 
               {/* Enhanced Parks and Green Areas */}
               <div className="absolute top-1/8 right-1/8 w-20 h-16 bg-gradient-to-br from-green-300 to-green-400 rounded-xl opacity-70 shadow-lg border-2 border-green-200"></div>

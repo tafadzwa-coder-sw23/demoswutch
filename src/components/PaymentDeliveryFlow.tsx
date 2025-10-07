@@ -18,7 +18,8 @@ import {
   Navigation,
   Package,
   User,
-  Phone
+  Phone,
+  Star
 } from "lucide-react";
 
 interface PaymentMethod {
@@ -60,7 +61,7 @@ interface PaymentDeliveryFlowProps {
 }
 
 const PaymentDeliveryFlow = ({ agreement, onComplete, onBack }: PaymentDeliveryFlowProps) => {
-  const [step, setStep] = useState<'payment' | 'delivery' | 'transporter' | 'confirmation'>('payment');
+  const [step, setStep] = useState<'payment' | 'payment_processing' | 'delivery' | 'transporter' | 'confirmation'>('payment');
   const [selectedPayment, setSelectedPayment] = useState<string>('');
   const [selectedDelivery, setSelectedDelivery] = useState<string>('');
   const [selectedTransporter, setSelectedTransporter] = useState<string>('');
@@ -174,7 +175,14 @@ const PaymentDeliveryFlow = ({ agreement, onComplete, onBack }: PaymentDeliveryF
 
   const handlePaymentSelect = (paymentId: string) => {
     setSelectedPayment(paymentId);
-    setStep('delivery');
+    
+    // If cash on delivery, skip payment processing and go to delivery
+    if (paymentId === 'cash') {
+      setStep('delivery');
+    } else {
+      // For prepaid methods, go to payment processing first
+      setStep('payment_processing');
+    }
   };
 
   const handleDeliverySelect = (deliveryId: string) => {
@@ -189,6 +197,11 @@ const PaymentDeliveryFlow = ({ agreement, onComplete, onBack }: PaymentDeliveryF
   const handleTransporterSelect = (transporterId: string) => {
     setSelectedTransporter(transporterId);
     setStep('confirmation');
+  };
+
+  const handlePaymentProcessingComplete = () => {
+    // After successful payment processing, proceed to delivery
+    setStep('delivery');
   };
 
   const calculateTotal = () => {
@@ -261,6 +274,77 @@ const PaymentDeliveryFlow = ({ agreement, onComplete, onBack }: PaymentDeliveryF
       </div>
     </div>
   );
+
+  const renderPaymentProcessingStep = () => {
+    const selectedMethod = paymentMethods.find(p => p.id === selectedPayment);
+    const Icon = selectedMethod?.icon || CreditCard;
+    
+    return (
+      <div className="space-y-6">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Icon className="h-8 w-8 text-primary" />
+          </div>
+          <h2 className="text-2xl font-bold mb-2">Processing Payment</h2>
+          <p className="text-muted-foreground">
+            Processing your {selectedMethod?.name} payment...
+          </p>
+        </div>
+
+        <Card className="p-6">
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground">Payment Method:</span>
+              <span className="font-medium">{selectedMethod?.name}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground">Amount:</span>
+              <span className="font-bold text-lg">${agreement.agreedPrice.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground">Processing Fee:</span>
+              <span className="font-medium">${selectedMethod?.fee.toFixed(2)}</span>
+            </div>
+            <div className="border-t pt-2">
+              <div className="flex justify-between items-center">
+                <span className="font-semibold">Total:</span>
+                <span className="font-bold text-lg">${(agreement.agreedPrice + (selectedMethod?.fee || 0)).toFixed(2)}</span>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* Simulate payment processing */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+              <CheckCircle className="h-3 w-3 text-white" />
+            </div>
+            <span className="text-sm">Validating payment method</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+              <CheckCircle className="h-3 w-3 text-white" />
+            </div>
+            <span className="text-sm">Processing payment</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="w-4 h-4 bg-primary rounded-full animate-pulse"></div>
+            <span className="text-sm">Confirming transaction</span>
+          </div>
+        </div>
+
+        <div className="flex justify-between">
+          <Button variant="outline" onClick={() => setStep('payment')}>
+            Back
+          </Button>
+          <Button onClick={handlePaymentProcessingComplete}>
+            Payment Successful - Continue
+          </Button>
+        </div>
+      </div>
+    );
+  };
 
   const renderDeliveryStep = () => (
     <div className="space-y-6">
@@ -491,11 +575,14 @@ const PaymentDeliveryFlow = ({ agreement, onComplete, onBack }: PaymentDeliveryF
           onClick={() => onComplete({
             agreement,
             payment: selectedPayment,
+            paymentMethod: selectedPayment,
             delivery: selectedDelivery,
             transporter: selectedTransporter,
             address: deliveryAddress,
             instructions: specialInstructions,
-            total: calculateTotal()
+            total: calculateTotal(),
+            vendor: agreement.vendor,
+            item: agreement.item
           })}
           className="bg-green-600 hover:bg-green-700"
         >
@@ -517,6 +604,7 @@ const PaymentDeliveryFlow = ({ agreement, onComplete, onBack }: PaymentDeliveryF
         </CardHeader>
         <CardContent>
           {step === 'payment' && renderPaymentStep()}
+          {step === 'payment_processing' && renderPaymentProcessingStep()}
           {step === 'delivery' && renderDeliveryStep()}
           {step === 'transporter' && renderTransporterStep()}
           {step === 'confirmation' && renderConfirmationStep()}

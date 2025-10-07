@@ -28,6 +28,7 @@ const TransactionFlow = ({ item, isOpen, onClose }: TransactionFlowProps) => {
   const [selectedVendor, setSelectedVendor] = useState<any>(null);
   const [agreement, setAgreement] = useState<any>(null);
   const [transaction, setTransaction] = useState<any>(null);
+  const [paymentMethod, setPaymentMethod] = useState<string>('');
 
   // Mock vendors data
   const vendors = [
@@ -93,6 +94,7 @@ const TransactionFlow = ({ item, isOpen, onClose }: TransactionFlowProps) => {
   ];
 
   const handleVendorSelect = (vendor: any) => {
+    console.log('Vendor selected:', vendor);
     setSelectedVendor(vendor);
     setCurrentStep('negotiation');
   };
@@ -103,17 +105,64 @@ const TransactionFlow = ({ item, isOpen, onClose }: TransactionFlowProps) => {
   };
 
   const handleAgreement = (agreementData: any) => {
+    console.log('Agreement reached:', agreementData);
     setAgreement(agreementData);
-    setCurrentStep('payment');
+    // Small delay to show the agreement was reached
+    setTimeout(() => {
+      setCurrentStep('payment');
+    }, 500);
   };
 
   const handlePaymentComplete = (transactionData: any) => {
+    console.log('Payment completed:', transactionData);
     setTransaction(transactionData);
+    setPaymentMethod(transactionData.paymentMethod || 'cash');
     setCurrentStep('tracking');
   };
 
   const handleDeliveryComplete = () => {
     setCurrentStep('completed');
+  };
+
+  const handleNextStep = () => {
+    const steps = ['comparison', 'negotiation', 'payment', 'tracking', 'completed'];
+    const currentIndex = steps.indexOf(currentStep);
+    if (currentIndex < steps.length - 1) {
+      const nextStep = steps[currentIndex + 1];
+      // Check if we can proceed to next step
+      if (nextStep === 'negotiation' && selectedVendor) {
+        setCurrentStep('negotiation');
+      } else if (nextStep === 'payment' && agreement) {
+        setCurrentStep('payment');
+      } else if (nextStep === 'tracking' && transaction) {
+        setCurrentStep('tracking');
+      } else if (nextStep === 'completed' && currentStep === 'tracking') {
+        setCurrentStep('completed');
+      }
+    }
+  };
+
+  const handlePreviousStep = () => {
+    const steps = ['comparison', 'negotiation', 'payment', 'tracking', 'completed'];
+    const currentIndex = steps.indexOf(currentStep);
+    if (currentIndex > 0) {
+      setCurrentStep(steps[currentIndex - 1] as any);
+    }
+  };
+
+  const canProceedToNext = () => {
+    switch (currentStep) {
+      case 'comparison':
+        return selectedVendor !== null;
+      case 'negotiation':
+        return agreement !== null;
+      case 'payment':
+        return agreement !== null; // Can proceed if we have an agreement
+      case 'tracking':
+        return transaction !== null; // Need transaction to track
+      default:
+        return false;
+    }
   };
 
   const renderStepIndicator = () => {
@@ -125,25 +174,92 @@ const TransactionFlow = ({ item, isOpen, onClose }: TransactionFlowProps) => {
       { id: 'completed', label: 'Complete', icon: CheckCircle }
     ];
 
+    const getStepStatus = (stepId: string, stepIndex: number) => {
+      const currentIndex = steps.findIndex(s => s.id === currentStep);
+      if (currentIndex > stepIndex) return 'completed';
+      if (currentIndex === stepIndex) return 'active';
+      return 'pending';
+    };
+
+  const canNavigateToStep = (stepId: string, stepIndex: number) => {
+    const currentIndex = steps.findIndex(s => s.id === currentStep);
+    
+    // Can always go back to previous steps
+    if (stepIndex < currentIndex) return true;
+    
+    // Allow navigation to next step if current step is completed
+    if (stepIndex === currentIndex + 1) {
+      switch (currentStep) {
+        case 'comparison':
+          return selectedVendor !== null;
+        case 'negotiation':
+          return agreement !== null;
+        case 'payment':
+          return transaction !== null;
+        case 'tracking':
+          return true;
+        default:
+          return false;
+      }
+    }
+    
+    // For other forward steps, require all previous steps to be completed
+    if (stepId === 'negotiation') {
+      return selectedVendor !== null;
+    }
+    if (stepId === 'payment') {
+      return selectedVendor !== null && agreement !== null;
+    }
+    if (stepId === 'tracking') {
+      return selectedVendor !== null && agreement !== null && transaction !== null;
+    }
+    if (stepId === 'completed') {
+      return selectedVendor !== null && agreement !== null && transaction !== null;
+    }
+    
+    return false;
+  };
+
+    const handleStepClick = (stepId: string, stepIndex: number) => {
+      if (canNavigateToStep(stepId, stepIndex)) {
+        setCurrentStep(stepId as any);
+      }
+    };
+
     return (
       <div className="flex items-center justify-center mb-6">
         <div className="flex items-center gap-2">
           {steps.map((step, index) => {
             const Icon = step.icon;
-            const isActive = currentStep === step.id;
-            const isCompleted = steps.findIndex(s => s.id === currentStep) > index;
+            const status = getStepStatus(step.id, index);
+            const canNavigate = canNavigateToStep(step.id, index);
             
             return (
               <React.Fragment key={step.id}>
-                <div className={`flex items-center gap-2 px-3 py-2 rounded-lg ${
-                  isActive ? 'bg-primary text-primary-foreground' : 
-                  isCompleted ? 'bg-green-100 text-green-800' : 'bg-muted'
-                }`}>
+                <div 
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${
+                    canNavigate ? 'cursor-pointer' : 'cursor-not-allowed'
+                  } ${
+                    status === 'active' ? 'bg-primary text-primary-foreground shadow-md' : 
+                    status === 'completed' ? 'bg-green-100 text-green-800 hover:bg-green-200 border border-green-300' : 
+                    canNavigate ? 'bg-muted hover:bg-muted/80 border border-muted-foreground/20' : 'bg-muted opacity-50'
+                  }`}
+                  onClick={() => handleStepClick(step.id, index)}
+                  title={canNavigate ? `Go to ${step.label}` : 'Complete previous steps first'}
+                >
                   <Icon className="h-4 w-4" />
                   <span className="text-sm font-medium">{step.label}</span>
+                  {status === 'completed' && (
+                    <CheckCircle className="h-3 w-3 ml-1 text-green-600" />
+                  )}
+                  {status === 'active' && (
+                    <div className="w-2 h-2 bg-primary-foreground rounded-full animate-pulse ml-1" />
+                  )}
                 </div>
                 {index < steps.length - 1 && (
-                  <div className="w-8 h-0.5 bg-muted"></div>
+                  <div className={`w-8 h-0.5 ${
+                    status === 'completed' ? 'bg-green-300' : 'bg-muted'
+                  }`}></div>
                 )}
               </React.Fragment>
             );
@@ -244,13 +360,34 @@ const TransactionFlow = ({ item, isOpen, onClose }: TransactionFlowProps) => {
           )}
 
           {currentStep === 'negotiation' && selectedVendor && (
-            <NegotiationChat
-              vendor={selectedVendor}
-              item={item}
-              isOpen={true}
-              onClose={() => setCurrentStep('comparison')}
-              onAgreement={handleAgreement}
-            />
+            <div className="space-y-4">
+              <NegotiationChat
+                vendor={selectedVendor}
+                item={item}
+                isOpen={true}
+                onClose={() => setCurrentStep('comparison')}
+                onAgreement={handleAgreement}
+              />
+              
+              {/* Fallback: Skip negotiation button */}
+              <div className="flex justify-center pt-4 border-t">
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    // Auto-complete negotiation with vendor's price
+                    handleAgreement({
+                      vendor: selectedVendor,
+                      item: item,
+                      agreedPrice: selectedVendor.price,
+                      timestamp: new Date()
+                    });
+                  }}
+                  className="text-sm"
+                >
+                  Skip Negotiation & Use Vendor Price (${selectedVendor.price.toFixed(2)})
+                </Button>
+              </div>
+            </div>
           )}
 
           {currentStep === 'payment' && agreement && (
@@ -270,6 +407,46 @@ const TransactionFlow = ({ item, isOpen, onClose }: TransactionFlowProps) => {
           )}
 
           {currentStep === 'completed' && renderCompletedStep()}
+
+          {/* Navigation Controls */}
+          {currentStep !== 'completed' && (
+            <div className="flex justify-between items-center mt-6 pt-4 border-t">
+              <Button 
+                variant="outline" 
+                onClick={handlePreviousStep}
+                disabled={currentStep === 'comparison'}
+                className="flex items-center gap-2"
+              >
+                ← Previous
+              </Button>
+              
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">
+                    Step {['comparison', 'negotiation', 'payment', 'tracking', 'completed'].indexOf(currentStep) + 1} of 5
+                  </span>
+                </div>
+                
+                {/* Progress Bar */}
+                <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-primary transition-all duration-300"
+                    style={{ 
+                      width: `${((['comparison', 'negotiation', 'payment', 'tracking', 'completed'].indexOf(currentStep) + 1) / 5) * 100}%` 
+                    }}
+                  />
+                </div>
+              </div>
+              
+              <Button 
+                onClick={handleNextStep}
+                disabled={!canProceedToNext()}
+                className="flex items-center gap-2"
+              >
+                {currentStep === 'tracking' ? 'Complete Order' : 'Next →'}
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

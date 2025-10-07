@@ -252,19 +252,154 @@ const DeliveryTracking = ({ transaction, isOpen, onClose }: DeliveryTrackingProp
             </div>
           </Card>
 
-          {/* Map Placeholder */}
+          {/* Enhanced Map Tracking */}
           <Card className="p-4">
-            <h3 className="font-semibold mb-3">Live Location</h3>
-            <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
-                <p className="text-muted-foreground">Live tracking map</p>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-semibold">Live Delivery Tracking</h3>
+              <Badge className="bg-green-100 text-green-800">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+                Live
+              </Badge>
+            </div>
+            
+            {/* Map Container */}
+            <div className="relative aspect-video bg-gradient-to-br from-blue-50 to-green-50 rounded-lg overflow-hidden border">
+              {/* Route Line */}
+              <div className="absolute inset-0">
+                <svg className="w-full h-full">
+                  <path
+                    d="M 50 200 Q 200 100 350 150"
+                    stroke="#3b82f6"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeDasharray="5,5"
+                    className="animate-pulse"
+                  />
+                  {/* Start Point (Vendor) */}
+                  <circle cx="50" cy="200" r="8" fill="#ef4444" />
+                  <text x="50" y="195" textAnchor="middle" className="text-xs font-bold fill-white">V</text>
+                  
+                  {/* Current Position */}
+                  <circle 
+                    cx={50 + (300 * (1 - distance / 2.3))} 
+                    cy={200 - (50 * (1 - distance / 2.3))} 
+                    r="10" 
+                    fill="#3b82f6"
+                    className="animate-pulse"
+                  />
+                  <text 
+                    x={50 + (300 * (1 - distance / 2.3))} 
+                    y={200 - (50 * (1 - distance / 2.3)) - 15} 
+                    textAnchor="middle" 
+                    className="text-xs font-bold fill-white"
+                  >
+                    🚚
+                  </text>
+                  
+                  {/* Destination */}
+                  <circle cx="350" cy="150" r="8" fill="#10b981" />
+                  <text x="350" y="145" textAnchor="middle" className="text-xs font-bold fill-white">D</text>
+                </svg>
+              </div>
+              
+              {/* Overlay Info */}
+              <div className="absolute top-4 left-4 right-4 flex justify-between">
+                <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-sm">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Navigation className="h-4 w-4 text-blue-600" />
+                    <span className="text-sm font-medium">ETA: {eta} min</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {distance.toFixed(1)}km remaining
+                  </div>
+                </div>
+                
+                <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-sm">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Clock className="h-4 w-4 text-orange-600" />
+                    <span className="text-sm font-medium">
+                      {currentStatus.status === 'delivered' ? 'Delivered' : 'In Transit'}
+                    </span>
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {currentStatus.timestamp?.toLocaleTimeString()}
+                  </div>
+                </div>
+              </div>
+              
+              {/* Status Indicator */}
+              <div className="absolute bottom-4 left-4 right-4">
+                <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-3 h-3 rounded-full ${
+                      currentStatus.status === 'delivered' ? 'bg-green-500' :
+                      currentStatus.status === 'arrived' ? 'bg-yellow-500' :
+                      'bg-blue-500 animate-pulse'
+                    }`}></div>
+                    <span className="text-sm font-medium">{currentStatus.message}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Route Details */}
+            <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                <span className="text-muted-foreground">Vendor Location</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                <span className="text-muted-foreground">Your Location</span>
+              </div>
+            </div>
+          </Card>
+
+          {/* Pickup Point Info (if applicable) */}
+          {transaction.delivery === 'pickup' && (
+            <Card className="p-4 border-orange-200 bg-orange-50">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                  <MapPin className="h-5 w-5 text-orange-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-orange-800">Pickup Point</h3>
+                  <p className="text-sm text-orange-600">Ready for collection</p>
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Navigation className="h-4 w-4 text-orange-600" />
+                  <span className="text-sm font-medium">Vendor Location</span>
+                </div>
+                <div className="bg-white rounded-lg p-3 border border-orange-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                    <span className="font-medium">{transaction.vendor.name}</span>
+                  </div>
                 <p className="text-sm text-muted-foreground">
-                  Transporter is {distance.toFixed(1)}km away
+                    {transaction.address || '123 Main Street, Harare'}
+                  </p>
+                  <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+                    <span>📞 {transporter.phone}</span>
+                    <span>⏰ Open until 6:00 PM</span>
+                  </div>
+                </div>
+                
+                <div className="bg-orange-100 rounded-lg p-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <AlertCircle className="h-4 w-4 text-orange-600" />
+                    <span className="text-sm font-medium text-orange-800">Pickup Instructions</span>
+                  </div>
+                  <p className="text-sm text-orange-700">
+                    Please bring a valid ID and show your order confirmation. 
+                    The item is ready for immediate pickup.
                 </p>
               </div>
             </div>
           </Card>
+          )}
 
           {/* Order Details */}
           <Card className="p-4">
@@ -272,19 +407,23 @@ const DeliveryTracking = ({ transaction, isOpen, onClose }: DeliveryTrackingProp
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Order ID:</span>
-                <span className="font-mono">#{transaction.id}</span>
+                <span className="font-mono">#{transaction.id || Date.now().toString().slice(-6)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Item:</span>
-                <span>{transaction.item.title}</span>
+                <span>{transaction.item?.title || 'Selected Item'}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Vendor:</span>
-                <span>{transaction.vendor.name}</span>
+                <span>{transaction.vendor?.name || 'Selected Vendor'}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Total:</span>
-                <span className="font-semibold">${transaction.total.toFixed(2)}</span>
+                <span className="font-semibold">${transaction.total?.toFixed(2) || '0.00'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Delivery Method:</span>
+                <span className="capitalize">{transaction.delivery || 'delivery'}</span>
               </div>
             </div>
           </Card>

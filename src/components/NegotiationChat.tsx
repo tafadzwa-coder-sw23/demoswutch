@@ -150,6 +150,16 @@ const NegotiationChat = ({ vendor, item, isOpen, onClose, onAgreement }: Negotia
     });
   };
 
+  const handleCompleteNegotiation = () => {
+    // Auto-complete negotiation with current item price
+    onAgreement({
+      vendor,
+      item,
+      agreedPrice: item.price,
+      timestamp: new Date()
+    });
+  };
+
   const handleVideoCall = () => {
     setIsVideoCall(true);
     // In real implementation, this would start a video call
@@ -292,6 +302,19 @@ const NegotiationChat = ({ vendor, item, isOpen, onClose, onAgreement }: Negotia
               </div>
             </div>
           )}
+
+          {/* Complete Negotiation Button */}
+          <div className="p-4 border-t bg-primary/5">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="font-medium">Ready to proceed?</h4>
+                <p className="text-sm text-muted-foreground">Complete negotiation to continue</p>
+              </div>
+              <Button onClick={handleCompleteNegotiation} className="bg-primary hover:bg-primary/90">
+                Complete Negotiation
+              </Button>
+            </div>
+          </div>
 
           {/* Input Area */}
           <div className="p-4 border-t">
